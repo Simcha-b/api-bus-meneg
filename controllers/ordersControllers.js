@@ -4,16 +4,17 @@ import fetchData from "../api-trafik/traficReports.js";
 
 //function to get all orders
 async function getOrders(req, res) {
-  try {
-    const orders = await ordersQueries.getAllOrders();
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error retrieving orders",
-      error: error.message || "Internal Server Error",
-    });
-  }
+  // try {
+  //   const orders = await ordersQueries.getAllOrders();
+  //   res.json(orders);
+  // } catch (error) {
+  //   res.status(500).json({
+  //     success: false,
+  //     message: "Error retrieving orders",
+  //     error: error.message || "Internal Server Error",
+  //   });
+  // }
+  res.send("Hello from getOrders");
 }
 //function to get order by id
 async function getOrderById(req, res) {
