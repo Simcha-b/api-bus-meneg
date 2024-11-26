@@ -14,6 +14,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://bederech-hayshar-914f7e5318cb.herokuapp.com",
+      "https://bederech-hayshar.netlify.app"
     ],
     credentials: true,
   })
