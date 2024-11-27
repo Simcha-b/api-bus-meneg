@@ -54,53 +54,53 @@ async function fetchTrafficReports() {
   } catch (error) {
     console.error('Error fetching traffic reports:', error.message);
 
-    // Fallback לפתרון מבוסס Puppeteer
-    // if (error.response?.status === 403) {
-    //   console.warn('ניסיון לעקוף חסימה באמצעות Puppeteer...');
-    //   return await fetchTrafficReportsWithPuppeteer();
-    // }
+   // Fallback לפתרון מבוסס Puppeteer
+    if (error.response?.status === 403) {
+      console.warn('ניסיון לעקוף חסימה באמצעות Puppeteer...');
+      return await fetchTrafficReportsWithPuppeteer();
+    }
   }
 }
 
-// // Fallback: שימוש ב-Puppeteer
-// import puppeteer from 'puppeteer';
+// Fallback: שימוש ב-Puppeteer
+import puppeteer from 'puppeteer';
 
-// async function fetchTrafficReportsWithPuppeteer() {
-//   try {
-//     const browser = await puppeteer.launch();
-//     const page = await browser.newPage();
-//     await page.goto(URL, { waitUntil: 'networkidle2' });
+async function fetchTrafficReportsWithPuppeteer() {
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(URL, { waitUntil: 'networkidle2' });
 
-//     // שליפת תוכן הדף
-//     const content = await page.content();
-//     const $ = cheerio.load(content);
+    // שליפת תוכן הדף
+    const content = await page.content();
+    const $ = cheerio.load(content);
 
-//     // חזור על הלוגיקה לניתוח הדיווחים כמו למעלה
-//     const reportCategories = [
-//       { id: '#allReports', category: 'הכל' },
-//     ];
+    // חזור על הלוגיקה לניתוח הדיווחים כמו למעלה
+    const reportCategories = [
+      { id: '#allReports', category: 'הכל' },
+    ];
 
-//     const reports = [];
+    const reports = [];
 
-//     reportCategories.forEach(({ id, category }) => {
-//       $(`${id} .reportsList__item`).each((index, element) => {
-//         const roadNumber = $(element).find('.roadNumber').text().trim().replace(/\s+/g, ' ');
-//         const description = $(element).find('.description').text().trim().replace(/\s+/g, ' ');
+    reportCategories.forEach(({ id, category }) => {
+      $(`${id} .reportsList__item`).each((index, element) => {
+        const roadNumber = $(element).find('.roadNumber').text().trim().replace(/\s+/g, ' ');
+        const description = $(element).find('.description').text().trim().replace(/\s+/g, ' ');
 
-//         reports.push({
-//           roadNumber,
-//           description,
-//           category,
-//         });
-//       });
-//     });
+        reports.push({
+          roadNumber,
+          description,
+          category,
+        });
+      });
+    });
 
-//     await browser.close();
-//     return reports;
-//   } catch (error) {
-//     console.error('Error fetching traffic reports with Puppeteer:', error.message);
-//     return [];
-//   }
-// }
+    await browser.close();
+    return reports;
+  } catch (error) {
+    console.error('Error fetching traffic reports with Puppeteer:', error.message);
+    return [];
+  }
+}
 
 export default fetchTrafficReports;
