@@ -2,11 +2,41 @@ import ordersQueries from "../db/queries/ordersQueries.js";
 import { calculateDistance } from "../api-maps/fetchMaps.js";
 import fetchData from "../api-trafik/traficReports.js";
 
+// Helper function to format dates in responses
+async function formatDatesInResponse(data, dateFields = ['order_date']) {
+  if (!data) return data;
+  
+  if (Array.isArray(data)) {
+    return Promise.all(data.map(item => formatDatesInResponse(item, dateFields)));
+  }
+  
+  if (typeof data === 'object') {
+    const formattedData = { ...data };
+    for (const field of dateFields) {
+      if (formattedData[field]) {
+        const date = new Date(formattedData[field]);
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const year = date.getFullYear();
+        formattedData[field] = `${month}-${day}-${year}`;
+      }
+    }
+    return formattedData;
+  }
+  
+  const date = new Date(data);
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${month}-${day}-${year}`;
+}
+
 //function to get all orders
 async function getOrders(req, res) {
   try {
     const orders = await ordersQueries.getAllOrders();
-    res.json(orders);
+    const formattedOrders = await formatDatesInResponse(orders);
+    res.json(formattedOrders);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -15,6 +45,7 @@ async function getOrders(req, res) {
     });
   }
 }
+
 //function to get order by id
 async function getOrderById(req, res) {
   const orderId = req.params.id;
@@ -27,7 +58,8 @@ async function getOrderById(req, res) {
         error: error.message || "Internal Server Error",
       });
     } else {
-      res.json(order);
+      const formattedOrder = await formatDatesInResponse(order);
+      res.json(formattedOrder);
     }
   } catch (error) {
     res.status(500).json({
@@ -37,11 +69,13 @@ async function getOrderById(req, res) {
     });
   }
 }
+
 //function to get future orders
 async function getFutureOrders(req, res) {
   try {
-    const FutureOrders = await ordersQueries.getFutureOrders();
-    res.json(FutureOrders);
+    const futureOrders = await ordersQueries.getFutureOrders();
+    const formattedOrders = await formatDatesInResponse(futureOrders);
+    res.json(formattedOrders);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -50,6 +84,7 @@ async function getFutureOrders(req, res) {
     });
   }
 }
+
 //function to get orders by date
 async function getOrdersByDate(req, res) {
   const { year, month } = req.query;
@@ -69,6 +104,7 @@ async function getOrdersByDate(req, res) {
     });
   }
 }
+
 //function to get orders by customer id
 async function getOrdersByCustomerId(req, res) {
   const customerId = req.params.id;
@@ -83,6 +119,7 @@ async function getOrdersByCustomerId(req, res) {
     });
   }
 }
+
 //function to get orders by company id
 async function getOrdersByCompanyId(req, res) {
   const companyId = req.params.id;
@@ -97,6 +134,7 @@ async function getOrdersByCompanyId(req, res) {
     });
   }
 }
+
 //function to insert orders
 async function insertOrders(req, res) {
   const order = req.body;
@@ -116,24 +154,11 @@ async function insertOrders(req, res) {
     });
   }
 }
-//function to format date for mysql
-function formatDateForMySQL(dateString) {
-  if (!dateString) return null;
-  return new Date(dateString).toISOString().slice(0, 19).replace("T", " ");
-}
+
 //function to update orders
 async function updateOrders(req, res) {
   const orderId = req.params.id;
   const updates = req.body;
-
-  // Format the date if it exists in the updates
-  if (updates.order_date) {
-    console.log(updates.order_date);
-    
-    updates.order_date = formatDateForMySQL(updates.order_date);
-    console.log(updates.order_date);
-
-  }
 
   try {
     const updatedOrder = await ordersQueries.updateOrder(orderId, updates);
@@ -153,6 +178,7 @@ async function updateOrders(req, res) {
     });
   }
 }
+
 //function to update order status
 async function updateOrderStatus(req, res) {
   const orderId = req.params.id;
@@ -182,6 +208,7 @@ async function updateOrderStatus(req, res) {
     });
   }
 }
+
 //function to delete order
 async function deleteOrder(req, res) {
   const orderId = req.params.id;
@@ -204,6 +231,7 @@ async function deleteOrder(req, res) {
     });
   }
 }
+
 //function to get distance
 async function getDistance(req, res) {
   const locations = req.body.locations;
@@ -225,6 +253,7 @@ async function getDistance(req, res) {
     });
   }
 }
+
 //function to get traffic reports
 async function getTrafficReports(req, res) {
   try {
