@@ -5,7 +5,11 @@ const URL = "https://www.iroads.co.il/";
 async function fetchTrafficReports() {
     try {
       // שליפת התוכן של הדף
-      const { data } = await axios.get(URL); // יש להחליף בכתובת האתר
+      const { data } = await axios.get(URL, {
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+        },
+      }); // יש להחליף בכתובת האתר
       const $ = cheerio.load(data);
   // שמירת כל סוגי הדיווחים
   const reportCategories = [
