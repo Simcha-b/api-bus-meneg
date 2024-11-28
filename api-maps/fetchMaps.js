@@ -45,6 +45,8 @@ export async function calculateDistance(locations) {
 
     try {
       const response = await fetch(url);
+      console.log(url);
+      
       if (!response.ok) {
         throw new Error(
           `שגיאה בבקשת הנתונים: ${response.status} ${response.statusText}`
