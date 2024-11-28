@@ -16,7 +16,7 @@ export async function calculateDistance(locations) {
       origin
     )}&destinations=${encodeURIComponent(
       destination
-    )}&key=${API_KEY}&language=he`;
+    )}&key=${process.env.GOOGLE_MAPS_API_KEY}&language=he`;
 
     try {
       const response = await fetch(url);
