@@ -23,13 +23,12 @@ const secretKey = process.env.my_secret_key;
 async function loginUser(req, res) {
   const { email, password } = req.body;
   // console.log("Login request received:", email, password);
-  
+
   try {
     // שליפת המשתמש מהמסד
-    const [users] = await pool.query(
-      "SELECT idusers, password FROM users WHERE email = ?",
-      [email]
-    );
+    const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
 
     if (users.length === 0) {
       throw new Error("User not found");
@@ -46,13 +45,21 @@ async function loginUser(req, res) {
 
     // יצירת טוקן JWT
     const token = jwt.sign(
-      { userId: user.idusers, username: user.username, name: user.name }, // המידע שברצונך לכלול בטוקן
-      secretKey, // המפתח הסודי
-      { expiresIn: "1h" } // תוקף הטוקן (שעה אחת)
+      {
+        userId: user.idusers,
+        email: user.email,
+      },
+      secretKey,
+      { expiresIn: "24h" }
     );
-
-    console.log("Login successful!");    
-    res.json({token}); // החזרת הטוקן למשתמש
+    const userInfo = {
+      userId: user.idusers,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+    };
+    console.log("Login successful!");
+    res.json({ token, userInfo }); 
   } catch (err) {
     console.error("Error logging in:", err);
     throw err;
