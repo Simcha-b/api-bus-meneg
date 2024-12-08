@@ -28,7 +28,7 @@ const sendMail = async (req, res) => {
     });
 
     const mailOptions = {
-      from: 'simchaberkovitz@gmail.com',
+      from: 'בדרך הישר - ניהול',
       to: email,
       subject: subject,
       text: `${body}`,
