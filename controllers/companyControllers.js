@@ -42,6 +42,8 @@ async function insertCompany(req, res) {
     const newCompany = await companiesQueries.insertCompany(company);
     res.status(201).json(newCompany);
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({
       success: false,
       message: "Error inserting company",

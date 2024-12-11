@@ -5,7 +5,7 @@ import {
     getAllContacts,
     getContactById,
     getContactsByCustomerId,
-    insertContact,
+    insertContactIntoCustomer,
     updateContact,
     deleteContact,
 } from "../controllers/contactControllers.js";
@@ -15,7 +15,7 @@ router.get("/customer_id", getContactsByCustomerId);
 router.get("/", getAllContacts);
 router.get("/:id", getContactById);
 
-router.post("/", insertContact);
+router.post("/", insertContactIntoCustomer);
 router.put("/:id", updateContact);
 router.delete("/:id", deleteContact);
 

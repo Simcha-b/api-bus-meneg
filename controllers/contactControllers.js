@@ -52,12 +52,15 @@ async function getContactsByCustomerId(req, res) {
     }
 }
 
-//insert
-async function insertContact(req, res) {
+//insert contact into customer
+    
+async function insertContactIntoCustomer(req, res) {
+    const id = req.query.customer_id;
     const contact = req.body;
     try {
-        const rows = await contactQueries.insertContact(contact);
+        const rows = await contactQueries.insertContact(contact, id);
         res.json(rows);
+        console.log(rows);
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -98,4 +101,4 @@ async function deleteContact(req, res) {
     }
 }
 
-export  { getAllContacts, getContactById, getContactsByCustomerId, insertContact, updateContact, deleteContact };
+export  { getAllContacts, getContactById, getContactsByCustomerId, insertContactIntoCustomer, updateContact, deleteContact };
