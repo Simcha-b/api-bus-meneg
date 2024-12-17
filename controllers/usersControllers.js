@@ -6,6 +6,8 @@ const secretKey = process.env.my_secret_key;
 
 async function loginUser(req, res) {
   const { email, password } = req.body;
+  console.log("Login request received:", email, password);
+  
   // console.log("Login request received:", email, password);
 
   try {

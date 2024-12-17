@@ -10,9 +10,9 @@ const verifyToken = (req, res, next) => {
         return res.status(403).json({ message: "Token is required" });
     }
     try {
-        const decoded = jwt.verify(token, secretKey); // אימות הטוקן
-        req.user = decoded; // שמירת המידע מהטוקן ב-request
-        next(); // המשך לבקשה הבאה
+        const decoded = jwt.verify(token, secretKey);
+        req.user = decoded; 
+        next();
     } catch (err) {
         return res.status(401).json({ message: "Invalid or expired token" });
     }
