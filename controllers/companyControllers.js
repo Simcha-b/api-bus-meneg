@@ -1,4 +1,5 @@
 import companiesQueries from "../db/queries/companiesQueries.js";
+
 async function getCompanies(_, res) {
   try {
     const companies = await companiesQueries.getAllCompanies();
