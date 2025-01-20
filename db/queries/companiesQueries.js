@@ -17,8 +17,8 @@ async function getCompanyById(id) {
 //insert
 async function insertCompany(company) {
   const [rows] = await pool.query(
-    "INSERT INTO bus_companies (company_name, contact_name, phone, email) values(?,?,?,?)",
-    [company.company_name, company.contact_name, company.phone, company.email]
+    "INSERT INTO bus_companies (company_name, contact_name, contact_phone, contact_email) values(?,?,?,?)",
+    [company.company_name, company.contact_name, company.contact_phone, company.contact_email]
   );
   return rows;
 }
